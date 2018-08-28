@@ -1,4 +1,4 @@
-ddManager.initialize({
+ddManager.load("https://cdn-stage.ddmanager.ru/sdk/dd-manager.js"), ddManager.initialize({
     version: "1.2.9",
     buildNumber: 0,
     projectId: "f7327ee0-4611-4810-ba56-000baa867bac",
@@ -155,7 +155,7 @@ ddManager.initialize({
     }],
     scripts: [],
     integrationsPriority: {
-        before: ["OWOX BI Streaming", "Google Analytics"],
+        before: ["Google Analytics"],
         after: ["Retail Rocket", "Actionpay", "Mindbox"]
     },
     integrations: {
@@ -170,16 +170,17 @@ ddManager.initialize({
             cookieTracking: !0
         },
         "Google Analytics": {
-            sendUserId: !0,
             transliterate: !1,
+            clientIdCustomDimension: "dimension6",
+            useProxy: !1,
+            anonymizeIp: !1,
+            siteSpeedSampleRate: 1,
+            sendUserId: !0,
             defaultCurrency: "RUB",
             domain: "auto",
             enhancedEcommerce: !0,
             namespace: "ddm",
             enhancedLinkAttribution: !1,
-            useProxy: !1,
-            anonymizeIp: !1,
-            siteSpeedSampleRate: 1,
             trackingId: "UA-51485228-7",
             dimensions: {
                 dimension1: {
@@ -196,10 +197,6 @@ ddManager.initialize({
                     value: "wesite.regionId"
                 }
             }
-        },
-        "OWOX BI Streaming": {
-            sessionStreaming: !1,
-            namespace: "1233"
         },
         "Retail Rocket": {
             useGroupView: !1,
