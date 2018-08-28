@@ -1,0 +1,216 @@
+ddManager.initialize({
+    version: "1.2.9",
+    buildNumber: 0,
+    projectId: "f7327ee0-4611-4810-ba56-000baa867bac",
+    projectName: "demo.ddmanager.ru",
+    enrichments: [{
+        prop: "user.test",
+        event: "Viewed Page",
+        beforeEvent: !0,
+        handler: function(e) {
+            return 1
+        },
+        persist: !0,
+        persistTtl: 1
+    }],
+    events: [{
+        name: "Viewed Product Listing",
+        trigger: "event",
+        handler: function(e) {
+            if ("listing" === this.digitalData("page.type")) return {
+                category: "Ecommerce",
+                name: "Viewed Product Listing"
+            }
+        },
+        event: "Viewed Page"
+    }, {
+        name: "Viewed Product Detail",
+        trigger: "event",
+        handler: function(e) {
+            if ("product" === this.digitalData("page.type")) return {
+                category: "Ecommerce",
+                name: "Viewed Product Detail"
+            }
+        },
+        event: "Viewed Page"
+    }, {
+        name: "Searched Products",
+        trigger: "event",
+        handler: function(e) {
+            if ("search" === this.digitalData("page.type")) return {
+                category: "Ecommerce",
+                name: "Searched Products"
+            }
+        },
+        event: "Viewed Page"
+    }, {
+        name: "Viewed Checkout Step",
+        trigger: "event",
+        handler: function(e) {
+            var t = {
+                Cart: 1,
+                Authorization: 2,
+                "Payment and Delivery": 3,
+                "Order Preview": 4
+            }[this.digitalData("page.category")];
+            if (t) return {
+                category: "Ecommerce",
+                name: "Viewed Checkout Step",
+                step: t
+            }
+        },
+        event: "Viewed Page"
+    }, {
+        name: "Clicked Link",
+        trigger: "click",
+        handler: function(e) {
+            return {
+                name: "Clicked Link"
+            }
+        },
+        selector: ".footer-content > a",
+        followLink: !0
+    }, {
+        name: "Viewed Product",
+        trigger: "impression",
+        handler: function(e) {
+            for (var t = [], a = 0; a < e.length; a++) {
+                var i = e[a].getAttribute("data-product-id"),
+                    r = e[a].getAttribute("data-list-id");
+                t.push({
+                    product: i,
+                    listId: r
+                })
+            }
+            return {
+                name: "Viewed Product",
+                category: "Ecommerce",
+                listItems: t
+            }
+        },
+        selector: ".ddl_product"
+    }, {
+        name: "Clicked Product",
+        trigger: "click",
+        handler: function(e) {
+            return {
+                name: "Clicked Product",
+                category: "Ecommerce",
+                listItem: {
+                    product: e.getAttribute("data-product-id"),
+                    listId: e.getAttribute("data-list-id")
+                }
+            }
+        },
+        selector: ".ddl_product_link",
+        followLink: !0
+    }, {
+        name: "Clicked Campaign",
+        trigger: "click",
+        handler: function(e) {
+            return {
+                name: "Clicked Campaign",
+                category: "Promo",
+                campaign: e.getAttribute("data-campaign-id")
+            }
+        },
+        selector: ".ddl_campaign_link",
+        followLink: !0
+    }, {
+        name: "Viewed Campaign",
+        trigger: "impression",
+        handler: function(e) {
+            for (var t = [], a = 0; a < e.length; a++) {
+                var i = e[a].getAttribute("data-campaign-id");
+                t.push(i)
+            }
+            return {
+                name: "Viewed Campaign",
+                category: "Promo",
+                campaigns: t
+            }
+        },
+        selector: ".ddl_campaign"
+    }, {
+        name: "Completed Transaction",
+        trigger: "event",
+        handler: function(e) {
+            if ("confirmation" === this.digitalData("page.type")) return {
+                category: "Ecommerce",
+                name: "Completed Transaction",
+                transaction: this.digitalData("transaction")
+            }
+        },
+        event: "Viewed Page"
+    }, {
+        name: "Viewed Cart",
+        trigger: "event",
+        handler: function(e) {
+            if ("cart" === this.digitalData("page.type")) return {
+                category: "Ecommerce",
+                name: "Viewed Cart"
+            }
+        },
+        event: "Viewed Page"
+    }],
+    scripts: [],
+    integrationsPriority: {
+        before: ["OWOX BI Streaming", "Google Analytics"],
+        after: ["Retail Rocket", "Actionpay", "Mindbox"]
+    },
+    integrations: {
+        Actionpay: {
+            cookieDomain: "demo.ddmanager.ru",
+            cookieTtl: 90,
+            utmSource: "actionpay",
+            deduplication: !0,
+            aprt: !1,
+            defaultGoalId: "1",
+            cookieName: "actionpay",
+            cookieTracking: !0
+        },
+        "Google Analytics": {
+            sendUserId: !0,
+            transliterate: !1,
+            defaultCurrency: "RUB",
+            domain: "auto",
+            enhancedEcommerce: !0,
+            namespace: "ddm",
+            enhancedLinkAttribution: !1,
+            useProxy: !1,
+            anonymizeIp: !1,
+            siteSpeedSampleRate: 1,
+            trackingId: "UA-51485228-7",
+            dimensions: {
+                dimension1: {
+                    type: "digitalData",
+                    value: "user.hasTransacted"
+                }
+            }
+        },
+        Mindbox: {
+            apiVersion: "V3",
+            areaIdsMapping: {
+                websiteRegionId: {
+                    type: "digitalData",
+                    value: "wesite.regionId"
+                }
+            }
+        },
+        "OWOX BI Streaming": {
+            sessionStreaming: !1,
+            namespace: "1233"
+        },
+        "Retail Rocket": {
+            useGroupView: !1,
+            trackAllEmails: !1,
+            partnerId: "5a832a3c97a5281c3cd4e0a4",
+            productVariables: {
+                stockId: {
+                    type: "digitalData",
+                    value: "user.anonymousId"
+                }
+            }
+        }
+    }
+});
